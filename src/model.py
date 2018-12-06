@@ -16,11 +16,11 @@ class CrossDomainModel(nn.Module):
         self.u_latent_dims = config['u_latent_dim']
         self.i_latent_dims = config['i_latent_dim']
 
-        self.emb_users = nn.Embedding(self.number_users, self.u_latent_dims)
+        self.emb_users = nn.Embedding(self.number_users, self.u_latent_dims).to(config['device'])
         self.emb_items = list()
         for i in range(self.number_domains):
             emb_items_in_domain = nn.Embedding(self.number_items_in_domain[i],\
-                    self.i_latent_dims)
+                    self.i_latent_dims).to(config['device'])
             self.emb_items.append(emb_items_in_domain)
         #self.emb_items = nn.ModuleList([nn.Embedding(self.number_items_in_domain[i],
         #    self.i_latent_dims) for i in range(self.number_domains)])
@@ -64,7 +64,7 @@ class AutoGenReview(CrossDomainModel):
         self.lstm_hidden_size = config['lstm_hidden_size']
         self.lstm_num_layers = config['lstm_num_layers']
 
-        self.word_emb = nn.Embedding(self.vocab_size, self.vocab_emb_size)
+        self.word_emb = nn.Embedding(self.vocab_size, self.vocab_emb_size).to(config['device'])
         lstm_input_size = self.vocab_emb_size + self.u_latent_dims + self.i_latent_dims # since we concat embedding of 
         self.lstm = nn.LSTM(lstm_input_size, self.lstm_hidden_size, self.lstm_num_layers)
         self.linear = nn.Linear(self.lstm_hidden_size, self.vocab_size)

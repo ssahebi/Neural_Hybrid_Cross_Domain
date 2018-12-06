@@ -25,9 +25,11 @@ def main():
         uiData = pickle.load(f)
     config['num_users'] = uiData.getNumUsers()
     config['num_items_in_domain'] = uiData.getNumItems()
+    config['device'] = device
 
     # build data loader
     info = {'num_domain': 2, 
+            'device': device,
             'data': [('../data/ratings_Musical_Instruments.csv', 
                       '../data/reviews_Musical_Instruments_5.json'),
                      ('../data/ratings_Amazon_Instant_Video.csv', 
@@ -48,6 +50,8 @@ def main():
         for (u, i, d, rating, review, lengths) in loader:
             u = u.to(device)
             i = i.to(device)
+            review = review.to(device)
+            rating = rating.to(device)
             targets = pack_padded_sequence(review, lengths, batch_first=True)[0]
 
             predict_rating, output = model(u, i, d, review, lengths)
