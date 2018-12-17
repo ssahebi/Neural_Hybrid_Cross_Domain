@@ -26,14 +26,12 @@ def build_vocab(review_files, threshold):
     """threshold: if word frequency is less than threshold, ignore word"""
     counter = Counter()
     for rf in review_files:
-        f = open(rf, 'r')
-        lines = f.readlines()
-        f.close()
-        for line in lines:
-            review = json.loads(line)
-            text = review["reviewText"]
-            tokens = nltk.tokenize.word_tokenize(text.lower())
-            counter.update(tokens)
+        with open(rf, 'rb') as f:
+            for line in f:
+                review = json.loads(line)
+                text = review["reviewText"]
+                tokens = nltk.tokenize.word_tokenize(text.lower())
+                counter.update(tokens)
 
     # filter word with frequency is less than threshold
     words = [word for word, cnt in counter.items() if cnt >= threshold]

@@ -59,11 +59,10 @@ def build_info(rating_files):
     for fname in rating_files:
         userEachDomain = set()
         with open(fname, 'r') as f:
-            lines = f.readlines()
-        for line in lines:
-            comp = line.split(',')
-            uId = comp[0]
-            userEachDomain.add(uId)
+            for line in f:
+                comp = line.split(',')
+                uId = comp[0]
+                userEachDomain.add(uId)
         userAllDomains.append(userEachDomain)
     # users who rating in all domains
     intersection_users = set.intersection(*userAllDomains)
@@ -75,14 +74,13 @@ def build_info(rating_files):
     domainId = 0
     for fname in rating_files:
         with open(fname, 'r') as f:
-            lines = f.readlines()
-        for line in lines:
-            comp = line.split(',')
-            uId = comp[0]
-            if uId not in intersection_users:
-                continue
-            iId = comp[1]
-            info.add_item(iId, domainId)
+            for line in f:
+                comp = line.split(',')
+                uId = comp[0]
+                if uId not in intersection_users:
+                    continue
+                iId = comp[1]
+                info.add_item(iId, domainId)
         domainId += 1
     
     return info
